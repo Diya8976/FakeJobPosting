@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Job Detector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Fake Job Posting Detector</h1>
+        <form id="jobForm">
+            <label for="description">Job Description:</label>
+            <textarea name="description" required></textarea>
+
+            <label for="company_profile">Company Profile:</label>
+            <textarea name="company_profile" required></textarea>
+
+            <label for="requirements">Requirements:</label>
+            <textarea name="requirements" required></textarea>
+
+            <button type="submit">Check Job</button>
+        </form>
+
+        <div id="result" class="hidden">
+            <h2>Prediction: <span id="prediction-text"></span></h2>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('jobForm').onsubmit = async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            document.getElementById('prediction-text').innerText = data.prediction;
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
